@@ -25,14 +25,13 @@ export default function App() {
   };
 
   const filterContact = () => {
-    if (contacts.length === 0) return;
+    if (contacts.length === 0) {
+      return;
+    }
 
-    const normalizedString = filter.toLowerCase().trim();
-    const filterContactList = contacts.filter(({ name }) =>
-      name.toLowerCase().includes(normalizedString)
+    return contacts.filter(({ name }) =>
+      name.toLowerCase().includes(filter.toLowerCase().trim())
     );
-
-    return filterContactList;
   };
 
   const deleteContact = id => {
