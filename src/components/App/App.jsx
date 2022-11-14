@@ -4,12 +4,12 @@ import Filter from '../Filter/Filter';
 import ContactList from '../ContactList/ContactList';
 import { Container, TitlePrimary, TitleSecondary } from './App.styled';
 
-const LOCAL_STORAGE_KEY = 'contacts';
+const LOCAL_STORAGE_KEY = 'contacts-list';
 
 export default function App() {
-  const [contacts, setContacts] = useState(
-    JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) ?? []
-  );
+  const [contacts, setContacts] = useState(() => {
+    return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY)) ?? [];
+  });
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
@@ -25,20 +25,9 @@ export default function App() {
   };
 
   const filterContact = () => {
-    if (contacts.length === 0) {
-      return;
-    }
-
     return contacts.filter(({ name }) =>
       name.toLowerCase().includes(filter.toLowerCase().trim())
     );
-  };
-
-  const deleteContact = id => {
-    setContacts(prevState => {
-      prevState.filter(contact => contact.id !== id);
-      setFilter('');
-    });
   };
 
   return (
@@ -51,7 +40,15 @@ export default function App() {
         filter={filter}
         onChange={event => setFilter(event.target.value)}
       />
-      <ContactList contacts={filterContact()} deleteContact={deleteContact} />
+      <ContactList
+        contacts={filterContact()}
+        deleteContact={id => {
+          setContacts(prevState =>
+            prevState.filter(contact => contact.id !== id)
+          );
+          setFilter('');
+        }}
+      />
     </Container>
   );
 }
